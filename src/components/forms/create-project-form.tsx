@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,23 +24,43 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { http } from "@/lib/api";
+import { toast } from "sonner";
+import { useRef } from "react";
+import { AxiosError } from "axios";
 
 const formSchema = z
   .object({
     name: z.string().nonempty(),
     tag: z.array(z.string()).nonempty(),
-    port: z.coerce.number().positive(),
+    port: z.coerce.number().positive().min(4000),
   })
   .required({ name: true });
 type FormSchema = z.infer<typeof formSchema>;
 
 export const CreateProjectForm = () => {
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       port: 0,
       tag: [],
+    },
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (payload: FormSchema) => {
+      await http.post("/projects", payload);
+    },
+    onSuccess: () => {
+      toast.success("Project created successfully");
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else toast.error("Operation fail. Something went wrong!");
     },
   });
 
@@ -57,9 +78,7 @@ export const CreateProjectForm = () => {
           <form
             className="space-y-4"
             id="create-project-form"
-            onSubmit={form.handleSubmit(() => {
-              alert("Success");
-            })}
+            onSubmit={form.handleSubmit((val) => mutate(val))}
           >
             <FormField
               control={form.control}
@@ -104,6 +123,7 @@ export const CreateProjectForm = () => {
                   <FormControl>
                     <Input {...field} type="number" />
                   </FormControl>
+                  <FormDescription>Min: 4000</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -114,6 +134,12 @@ export const CreateProjectForm = () => {
           <Button form="create-project-form" type="submit">
             Submit
           </Button>
+          <DialogClose
+            ref={closeBtnRef}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Cancel
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

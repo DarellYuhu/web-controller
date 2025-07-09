@@ -18,6 +18,7 @@ import Link from "next/link";
 import { ReactNode, useEffect } from "react";
 import { GoProjectRoadmap } from "react-icons/go";
 import { FaRegNewspaper } from "react-icons/fa";
+import { AiOutlineTool } from "react-icons/ai";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -77,5 +78,10 @@ const menus = [
     label: "Article",
     path: "/articles",
     icon: <FaRegNewspaper />,
+  },
+  {
+    label: "Additional Config",
+    path: "/configuration",
+    icon: <AiOutlineTool />,
   },
 ];

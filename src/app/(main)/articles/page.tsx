@@ -1,7 +1,7 @@
 import { getArticles } from "@/api/article";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { UserPen } from "lucide-react";
+import { Pencil, UserPen } from "lucide-react";
 import Link from "next/link";
 
 export default async function ArticlesPage() {
@@ -15,7 +15,7 @@ export default async function ArticlesPage() {
       <div className="flex flex-col gap-3">
         {articles.map((item) => (
           <div
-            className="border rounded-md flex flex-row p-3 gap-4"
+            className="group border rounded-md flex flex-row p-3 gap-4 relative"
             key={item.id}
           >
             <img
@@ -35,6 +35,15 @@ export default async function ArticlesPage() {
               <p className="font-semibold">{item.title}</p>
               <p className="line-clamp-3">{item.contents}</p>
             </div>
+            <Button
+              variant={"outline"}
+              asChild
+              className="absolute top-2 right-2 group-hover:visible group-hover:opacity-100 invisible opacity-0 transition duration-150"
+            >
+              <Link href={`/articles/${item.id}`}>
+                <Pencil /> Edit
+              </Link>
+            </Button>
           </div>
         ))}
       </div>

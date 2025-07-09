@@ -21,3 +21,14 @@ type Article = {
   createdAt: string;
   updatedAt: string;
 };
+
+type Category = BaseMetadata & {
+  slug: string;
+};
+
+type BaseMetadata = {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+};

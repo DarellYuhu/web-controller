@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { ReactNode, useEffect } from "react";
 import { GoProjectRoadmap } from "react-icons/go";
+import { FaRegNewspaper } from "react-icons/fa";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -68,8 +69,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
 const menus = [
   {
-    label: "Projects",
+    label: "Project",
     path: "/projects",
     icon: <GoProjectRoadmap />,
+  },
+  {
+    label: "Article",
+    path: "/articles",
+    icon: <FaRegNewspaper />,
   },
 ];

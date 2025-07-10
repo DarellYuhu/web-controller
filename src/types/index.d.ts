@@ -14,7 +14,7 @@ type Article = {
   category?: string;
   project?: string;
   contents: string;
-  authorName: string;
+  author?: string;
   datePublished: string;
   imageUrl: string;
   tag: string;
@@ -32,3 +32,13 @@ type BaseMetadata = {
   updatedAt: string;
   createdAt: string;
 };
+
+interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    name: string;
+    role: string;
+  };
+}

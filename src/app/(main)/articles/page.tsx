@@ -25,10 +25,12 @@ export default async function ArticlesPage() {
             />
             <div>
               <div className="flex flex-row gap-2">
-                <Badge variant={"outline"}>
-                  <UserPen />
-                  {item.authorName}
-                </Badge>
+                {item.author && (
+                  <Badge variant={"outline"}>
+                    <UserPen />
+                    {item.author}
+                  </Badge>
+                )}
                 <Badge variant={"outline"}>{item.category}</Badge>
                 {item.project && <Badge>{item.project}</Badge>}
               </div>

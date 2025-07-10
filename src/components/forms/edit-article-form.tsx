@@ -22,7 +22,6 @@ const formSchema = z.object({
   contents: z.string().nonempty(),
   tagId: z.string().nonempty(),
   authorId: z.string().nonempty(),
-  projectId: z.string().nonempty(),
   categoryId: z.string().nonempty(),
   image: z.file().mime(["image/png", "image/jpeg"]),
 });
@@ -30,17 +29,17 @@ type FormSchema = z.infer<typeof formSchema>;
 type Props = {
   article: Article;
   tags: BaseMetadata[];
-  projects: Project[];
   authors: BaseMetadata[];
   categories: Category[];
+  reference?: string;
 };
 
 export function EditArticleForm({
   tags,
   categories,
-  projects,
   authors,
   article,
+  reference,
 }: Props) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -48,7 +47,6 @@ export function EditArticleForm({
       contents: "",
       categoryId: "",
       authorId: "",
-      projectId: "",
       tagId: "",
       image: undefined,
     },
@@ -116,28 +114,9 @@ export function EditArticleForm({
             />
             <FormField
               control={form.control}
-              name="projectId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <SingleSelect
-                      options={projects.map((i) => ({
-                        label: i.name,
-                        value: i.id,
-                      }))}
-                      onValueChange={field.onChange}
-                      placeholder="Select Project"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="authorId"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-full">
                   <FormControl>
                     <SingleSelect
                       options={authors.map((i) => ({
@@ -171,6 +150,12 @@ export function EditArticleForm({
               </FormItem>
             )}
           />
+          {reference && (
+            <div className="h-[320px] overflow-y-auto p-2 rounded-md border">
+              <p className="font-semibold text-gray-400">Reference</p>
+              <div dangerouslySetInnerHTML={{ __html: reference }} />
+            </div>
+          )}
           <FormField
             control={form.control}
             name="contents"

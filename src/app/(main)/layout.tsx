@@ -19,6 +19,9 @@ import { ReactNode, useEffect } from "react";
 import { GoProjectRoadmap } from "react-icons/go";
 import { FaRegNewspaper } from "react-icons/fa";
 import { AiOutlineTool } from "react-icons/ai";
+import { SessionProvider, signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Key } from "lucide-react";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -35,35 +38,46 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader></SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Menus</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {menus.map((menu, idx) => (
-                    <SidebarMenuItem key={idx}>
-                      <SidebarMenuButton asChild>
-                        <Link href={menu.path}>
-                          {menu.icon} {menu.label}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
-        <main className="w-full h-full">
-          <div className="p-5">
-            <SidebarTrigger />
-          </div>
-          <div className="p-5">{children}</div>
-        </main>
-      </SidebarProvider>
+      <SessionProvider>
+        <SidebarProvider>
+          <Sidebar>
+            <SidebarHeader></SidebarHeader>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Menus</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {menus.map((menu, idx) => (
+                      <SidebarMenuItem key={idx}>
+                        <SidebarMenuButton asChild>
+                          <Link href={menu.path}>
+                            {menu.icon} {menu.label}
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+          <main className="w-full h-full">
+            <div className="p-5 flex flex-row justify-between">
+              <SidebarTrigger />
+              <Button
+                className=""
+                onClick={() => signOut()}
+                variant={"destructive"}
+                size={"sm"}
+              >
+                <Key />
+                Sign Out
+              </Button>
+            </div>
+            <div className="p-5">{children}</div>
+          </main>
+        </SidebarProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

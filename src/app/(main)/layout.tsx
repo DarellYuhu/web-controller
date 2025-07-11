@@ -21,7 +21,7 @@ import { FaRegNewspaper } from "react-icons/fa";
 import { AiOutlineTool } from "react-icons/ai";
 import { SessionProvider, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Key } from "lucide-react";
+import { Globe, Key } from "lucide-react";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -41,7 +41,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <SessionProvider>
         <SidebarProvider>
           <Sidebar>
-            <SidebarHeader></SidebarHeader>
+            <SidebarHeader className="bg-green-500">hello</SidebarHeader>
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Menus</SidebarGroupLabel>
@@ -84,9 +84,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
 const menus = [
   {
-    label: "Project",
+    label: "Website",
     path: "/projects",
-    icon: <GoProjectRoadmap />,
+    icon: <Globe />,
   },
   {
     label: "Article",

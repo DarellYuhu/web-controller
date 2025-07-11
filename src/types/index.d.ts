@@ -4,7 +4,8 @@ type Project = {
   id: string;
   name: string;
   port: number;
-  tag: string[];
+  projectTag: string[];
+  description: string;
 };
 
 type Article = {
@@ -15,7 +16,7 @@ type Article = {
   project?: string;
   contents: string;
   author?: string;
-  datePublished: string;
+  datePublished?: string;
   imageUrl: string;
   tag: string;
   createdAt: string;

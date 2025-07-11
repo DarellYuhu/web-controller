@@ -1,7 +1,8 @@
 import { http } from "@/lib/api";
 
-export const getArticles = async () => {
-  return (await http.get<Article[]>(`/articles`)).data;
+export const getArticles = async (projectId?: string) => {
+  return (await http.get<Article[]>(`/articles`, { params: { projectId } }))
+    .data;
 };
 
 export const getArticle = async (id: string) => {

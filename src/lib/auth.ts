@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -12,14 +13,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         const res = await signInFn({
-          username: credentials.username,
-          password: credentials?.password,
+          username: credentials.username as string,
+          password: credentials.password as string,
         });
         return { ...res, id: res.user.id };
       },
     }),
   ],
-
   callbacks: {
     jwt({ token, user }) {
       if (user) {
@@ -32,6 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
+      /// @ts-ignore
       session.user = token;
       return session;
     },

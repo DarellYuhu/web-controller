@@ -5,6 +5,7 @@ import { getWhitelist } from "@/api/whitelist";
 import { CreateMetadataForm } from "@/components/forms/create-metadata-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+export const dynamic = "force-dynamic";
 export default async function ConfigurationPage() {
   const authors = await getAuthors();
   const tags = await getTags();

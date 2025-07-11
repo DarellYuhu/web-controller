@@ -1,13 +1,16 @@
 import { getProjects } from "@/api/project";
+import { getTags } from "@/api/tag";
 import { CreateProjectForm } from "@/components/forms/create-project-form";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
 export default async function ProjectsPage() {
   const projects = await getProjects();
+  const tags = await getTags();
   return (
     <div className="space-y-5">
-      <CreateProjectForm />
+      <CreateProjectForm tags={tags} />
       <div className="flex flex-col gap-3">
         {projects.map((item) => (
           <Link href={`/projects/${item.id}`} key={item.id}>
@@ -17,7 +20,7 @@ export default async function ProjectsPage() {
                 Port: <span className="italic">{item.port}</span>
               </p>
               <div className="space-x-1">
-                {item.tag.map((tag, idx) => (
+                {item.projectTag.map((tag, idx) => (
                   <Badge key={idx} variant={"outline"}>
                     {tag}
                   </Badge>

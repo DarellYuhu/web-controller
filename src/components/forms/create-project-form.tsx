@@ -29,24 +29,27 @@ import { http } from "@/lib/api";
 import { toast } from "sonner";
 import { useRef } from "react";
 import { AxiosError } from "axios";
+import MultipleSelector from "../ui/multiselect";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z
   .object({
     name: z.string().nonempty(),
-    tag: z.array(z.string()).nonempty(),
+    description: z.string().nonempty(),
+    tagIds: z.array(z.string()).nonempty(),
     port: z.coerce.number().positive().min(4000),
   })
   .required({ name: true });
 type FormSchema = z.infer<typeof formSchema>;
 
-export const CreateProjectForm = () => {
+export const CreateProjectForm = ({ tags }: { tags: BaseMetadata[] }) => {
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       port: 0,
-      tag: [],
+      tagIds: [],
     },
   });
 
@@ -66,12 +69,12 @@ export const CreateProjectForm = () => {
 
   return (
     <Dialog onOpenChange={(open) => !open && form.reset()}>
-      <DialogTrigger className={buttonVariants()}>Add Project</DialogTrigger>
+      <DialogTrigger className={buttonVariants()}>Add Website</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new project</DialogTitle>
+          <DialogTitle>Add new website?</DialogTitle>
           <DialogDescription>
-            Please fill all the required field bellow to create the project!
+            Please fill all the required field bellow to create the website!
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -85,7 +88,7 @@ export const CreateProjectForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Name</FormLabel>
+                  <FormLabel>Website Name</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -95,20 +98,42 @@ export const CreateProjectForm = () => {
             />
             <FormField
               control={form.control}
-              name="tag"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Tag</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input
-                      onChange={(e) =>
-                        field.onChange(e.target.value.split(/\s*,\s*/))
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tagIds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Website Tag</FormLabel>
+                  <FormControl>
+                    <MultipleSelector
+                      commandProps={{
+                        label: "Select tags",
+                      }}
+                      defaultOptions={tags.map((t) => ({
+                        label: t.name,
+                        value: t.id,
+                      }))}
+                      placeholder="Select tags"
+                      onChange={(v) => field.onChange(v.map((v) => v.value))}
+                      emptyIndicator={
+                        <p className="text-center text-sm">No results found</p>
                       }
                     />
                   </FormControl>
                   <FormDescription>
                     Seperate by comma (, ). Article that marked with this tag
-                    will be be used by this project
+                    will be be used by this website
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

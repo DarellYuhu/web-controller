@@ -6,7 +6,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,12 +15,12 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { ReactNode, useEffect } from "react";
-import { GoProjectRoadmap } from "react-icons/go";
 import { FaRegNewspaper } from "react-icons/fa";
 import { AiOutlineTool } from "react-icons/ai";
 import { SessionProvider, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Globe, Key } from "lucide-react";
+import { SidebarHeader } from "@/components/sidebar-header";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -36,12 +35,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.__TANSTACK_QUERY_CLIENT__ = queryClient;
   }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <SidebarProvider>
           <Sidebar>
-            <SidebarHeader className="bg-green-500">hello</SidebarHeader>
+            <SidebarHeader />
             <SidebarContent>
               <SidebarGroup>
                 <SidebarGroupLabel>Menus</SidebarGroupLabel>

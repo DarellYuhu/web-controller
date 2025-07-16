@@ -43,3 +43,9 @@ interface AuthResponse {
     role: string;
   };
 }
+
+enum SectionType {
+  Highlight,
+  TopPick,
+  Popular,
+}

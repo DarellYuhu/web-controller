@@ -10,7 +10,6 @@ type Props = {
 export default async function ArticlePage({ params }: Props) {
   const { id } = await params;
   const article = await getArticle(id);
-  console.log(article);
   return (
     <div className="space-y-4">
       <h1 className="font-semibold text-3xl">{article.title}</h1>

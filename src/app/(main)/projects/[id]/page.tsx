@@ -1,6 +1,7 @@
 import { getArticles } from "@/api/article";
 import { getProject } from "@/api/project";
 import { ArticleListItem } from "@/components/article-list-item";
+import { GenerateWebButton } from "@/components/generate-web-button";
 import { SetSectionDropdown } from "@/components/set-section-dropdown";
 import { Badge } from "@/components/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -22,7 +23,7 @@ export default async function ProjectPage({
   });
   return (
     <div className="space-y-8">
-      <div className="border rounded-md p-5">
+      <div className="border rounded-md p-5 flex justify-between">
         <table>
           <tbody>
             <tr>
@@ -43,7 +44,7 @@ export default async function ProjectPage({
             <tr>
               <td className="font-semibold text-gray-500">Tags</td>
               <td className="px-4">:</td>
-              <td>
+              <td className="space-x-1">
                 {project.projectTag.map((t, idx) => (
                   <Badge key={idx}>{t}</Badge>
                 ))}
@@ -51,6 +52,9 @@ export default async function ProjectPage({
             </tr>
           </tbody>
         </table>
+        <div>
+          <GenerateWebButton projectId={id} />
+        </div>
       </div>
       <div className="flex justify-between">
         <SetSectionDropdown />

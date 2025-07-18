@@ -8,6 +8,10 @@ type Project = {
   description: string;
 };
 
+type Cursor = {
+  id: string;
+  createdAt: string;
+};
 type Article = {
   id: string;
   title: string;

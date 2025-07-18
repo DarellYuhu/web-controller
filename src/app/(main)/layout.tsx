@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, Suspense, useEffect } from "react";
 import { FaRegNewspaper } from "react-icons/fa";
 import { AiOutlineTool } from "react-icons/ai";
 import { SessionProvider, signOut } from "next-auth/react";
@@ -61,8 +61,8 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               </SidebarGroup>
             </SidebarContent>
           </Sidebar>
-          <main className="w-full h-full">
-            <div className="p-5 flex flex-row justify-between">
+          <div className="w-full h-full">
+            <div className="p-4 flex flex-row justify-between sticky top-0 backdrop-blur-sm bg-white/80 z-10 border-b">
               <SidebarTrigger />
               <Button
                 className=""
@@ -74,8 +74,10 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 Sign Out
               </Button>
             </div>
-            <div className="p-5">{children}</div>
-          </main>
+            <main className="p-5">
+              <Suspense fallback={"Loading..."}>{children}</Suspense>
+            </main>
+          </div>
         </SidebarProvider>
       </SessionProvider>
     </QueryClientProvider>

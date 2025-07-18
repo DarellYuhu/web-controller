@@ -3,13 +3,15 @@ import { http } from "@/lib/api";
 export const getArticles = async ({
   projectId,
   sectionType,
+  cursor,
 }: {
   projectId?: string;
   sectionType?: SectionType;
+  cursor?: { id: string; createdAt: string };
 } = {}) => {
   return (
-    await http.get<Article[]>(`/articles`, {
-      params: { project_id: projectId, section_type: sectionType },
+    await http.get<{ data: Article[]; cursor: Cursor }>(`/articles`, {
+      params: { project_id: projectId, section_type: sectionType, cursor },
     })
   ).data;
 };

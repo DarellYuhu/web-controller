@@ -1,26 +1,24 @@
+"use client";
+
 import { getArticles } from "@/api/article";
 import { getProject } from "@/api/project";
 import { ArticleListItem } from "@/components/article-list-item";
 import { GenerateWebButton } from "@/components/generate-web-button";
 import { SetSectionDropdown } from "@/components/set-section-dropdown";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useInfiniteArticles } from "@/hooks/use-infinite-articles";
+import { useProject } from "@/hooks/use-project";
 import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
 
-export default async function ProjectPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ section_type: SectionType }>;
-}) {
-  const { id } = await params;
-  const { section_type } = await searchParams;
-  const project = await getProject(id);
-  const articles = await getArticles({
-    projectId: id,
-    sectionType: section_type,
-  });
+export default function ProjectPage() {
+  const searchParams = useSearchParams();
+  const sectionType = searchParams.get("section_type");
+  const { id }: { id?: string } = useParams();
+  const { data: project } = useProject(id);
+  const { data: articles, fetchNextPage } = useInfiniteArticles();
   return (
     <div className="space-y-8">
       <div className="border rounded-md p-5 flex justify-between">
@@ -29,39 +27,37 @@ export default async function ProjectPage({
             <tr>
               <td className="font-semibold text-gray-500">Website Name</td>
               <td className="px-4">:</td>
-              <td>{project.name}</td>
+              <td>{project?.name}</td>
             </tr>
             <tr>
               <td className="font-semibold text-gray-500">Description</td>
               <td className="px-4">:</td>
-              <td>{project.description}</td>
+              <td>{project?.description}</td>
             </tr>
             <tr>
               <td className="font-semibold text-gray-500">Port</td>
               <td className="px-4">:</td>
-              <td>{project.port}</td>
+              <td>{project?.port}</td>
             </tr>
             <tr>
               <td className="font-semibold text-gray-500">Tags</td>
               <td className="px-4">:</td>
               <td className="space-x-1">
-                {project.projectTag.map((t, idx) => (
+                {project?.projectTag.map((t, idx) => (
                   <Badge key={idx}>{t}</Badge>
                 ))}
               </td>
             </tr>
           </tbody>
         </table>
-        <div>
-          <GenerateWebButton projectId={id} />
-        </div>
+        <div>{id && <GenerateWebButton projectId={id} />}</div>
       </div>
       <div className="flex justify-between">
         <SetSectionDropdown />
         <ToggleGroup
           type="single"
           variant={"outline"}
-          value={section_type as unknown as string}
+          value={sectionType as unknown as string}
         >
           <ToggleGroupItem className="flex-1" value="all">
             <Link href={`/projects/${id}`}>All</Link>
@@ -78,10 +74,13 @@ export default async function ProjectPage({
         </ToggleGroup>
       </div>
       <div className="space-y-4">
-        {articles.map((ar) => (
-          <ArticleListItem article={ar} key={ar.id} />
-        ))}
+        {articles?.pages
+          .flatMap((ar) => ar.data)
+          .map((ar) => <ArticleListItem article={ar} key={ar.id} />)}
       </div>
+      <Button onClick={() => fetchNextPage()} className="flex place-self-end">
+        More
+      </Button>
     </div>
   );
 }

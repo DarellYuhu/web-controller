@@ -48,6 +48,13 @@ interface AuthResponse {
   };
 }
 
+type Prompt = {
+  id: stirng;
+  text: stirng;
+  createdAt: stirng;
+  updatedAt: stirng;
+};
+
 enum SectionType {
   Highlight,
   TopPick,

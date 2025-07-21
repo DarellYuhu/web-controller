@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Pencil, UserPen } from "lucide-react";
 import Link from "next/link";
 import { Checkbox } from "./ui/checkbox";
-import { useSelectedData } from "./set-section-dropdown";
+import { useSelectedData } from "@/stores/selected-store";
+
 export const ArticleListItem = ({ article }: { article: Article }) => {
   const { setSelected, selected } = useSelectedData();
   return (

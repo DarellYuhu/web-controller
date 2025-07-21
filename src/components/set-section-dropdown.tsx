@@ -9,33 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { ChevronDownIcon } from "lucide-react";
-import { create } from "zustand";
 import { useMutation } from "@tanstack/react-query";
 import { http } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-
-type State = { selected: string[] };
-type Action = { setSelected: (val: string) => void };
-enum SectionType {
-  Highlight = "Highlight",
-  TopPick = "TopPick",
-  Popular = "Popular",
-}
-
-export const useSelectedData = create<State & Action>((set) => ({
-  selected: [],
-  setSelected(val) {
-    set((prev) => {
-      const isExist = prev.selected.includes(val);
-      return {
-        selected: isExist
-          ? prev.selected.filter((id) => id !== val)
-          : [...prev.selected, val],
-      };
-    });
-  },
-}));
+import { useSelectedData } from "@/stores/selected-store";
 
 export const SetSectionDropdown = () => {
   const selected = useSelectedData((state) => state.selected);

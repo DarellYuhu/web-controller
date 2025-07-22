@@ -6,7 +6,7 @@ import { http } from "@/lib/api";
 import { toast } from "sonner";
 
 export const GenerateWebButton = ({ projectId }: { projectId: string }) => {
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       await http.post(`/generator/${projectId}`);
     },
@@ -18,7 +18,7 @@ export const GenerateWebButton = ({ projectId }: { projectId: string }) => {
     },
   });
   return (
-    <Button size={"sm"} onClick={() => mutate()}>
+    <Button size={"sm"} onClick={() => mutate()} disabled={isPending}>
       Generate Web
     </Button>
   );

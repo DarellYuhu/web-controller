@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useSelectedData } from "@/stores/selected-store";
 
 export const AddPromptDropdown = () => {
-  const { selected, setSelected } = useSelectedData();
+  const selected = useSelectedData((state) => state.selected);
   const { data: whitelist } = useWhitelist();
   const { mutate } = useMutation({
     mutationFn: async (id: string) => {

@@ -53,6 +53,7 @@ type Prompt = {
   text: stirng;
   createdAt: stirng;
   updatedAt: stirng;
+  score: number;
 };
 
 enum SectionType {

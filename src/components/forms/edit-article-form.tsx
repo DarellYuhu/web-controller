@@ -17,13 +17,16 @@ import { FileUploader } from "../file-uploader";
 import { useMutation } from "@tanstack/react-query";
 import { http } from "@/lib/api";
 import { toast } from "sonner";
+import { Trash } from "lucide-react";
 
 const formSchema = z.object({
   contents: z.string().nonempty(),
   tagId: z.string().nonempty(),
   authorId: z.string().nonempty(),
   categoryId: z.string().nonempty(),
-  image: z.file().mime(["image/png", "image/jpeg"]),
+  image: z
+    .union([z.file().mime(["image/png", "image/jpeg"]), z.string()])
+    .optional(),
 });
 type FormSchema = z.infer<typeof formSchema>;
 type Props = {
@@ -44,15 +47,16 @@ export function EditArticleForm({
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contents: "",
-      categoryId: "",
-      authorId: "",
-      tagId: "",
-      image: undefined,
+      contents: article.contents ?? "",
+      categoryId: article.categoryId ?? "",
+      authorId: article.authorId ?? "",
+      tagId: article.tagId ?? "",
+      image: article.imageUrl ?? undefined,
     },
   });
   const { mutate } = useMutation({
     async mutationFn(payload: FormSchema) {
+      if (typeof payload.image === "string") payload.image = undefined;
       await http.patch(`/articles/${article.id}`, payload, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -66,7 +70,7 @@ export function EditArticleForm({
   });
   return (
     <div className="space-y-4">
-      <p className="font-semibold text-xl">Create new article</p>
+      <p className="font-semibold text-xl">{article.title}</p>
       <Form {...form}>
         <form
           className="space-y-4"
@@ -87,6 +91,7 @@ export function EditArticleForm({
                       }))}
                       onValueChange={field.onChange}
                       placeholder="Select Tag"
+                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />
@@ -102,6 +107,7 @@ export function EditArticleForm({
                     <SingleSelect
                       placeholder="Select Category"
                       onValueChange={field.onChange}
+                      value={field.value}
                       options={categories.map((i) => ({
                         label: i.name,
                         value: i.id,
@@ -124,6 +130,7 @@ export function EditArticleForm({
                         value: i.id,
                       }))}
                       onValueChange={field.onChange}
+                      value={field.value}
                       placeholder="Select Author"
                     />
                   </FormControl>
@@ -138,13 +145,38 @@ export function EditArticleForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <FileUploader
-                    value={field.value ? [field.value] : undefined}
-                    accept={{ "image/*": [] }}
-                    maxSize={1024 * 1024 * 10}
-                    onValueChange={(val) => field.onChange(val[0])}
-                    multiple={false}
-                  />
+                  {typeof form.watch("image") === "string" ? (
+                    <div className="relative h-64 w-full">
+                      <img
+                        src={field.value}
+                        alt="preview-image"
+                        className="size-full rounded-md object-contain border p-1"
+                      />
+                      <Button
+                        size={"icon"}
+                        variant={"destructive"}
+                        className="absolute top-2 right-2"
+                        type="button"
+                        onClick={() => form.setValue("image", undefined)}
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ) : (
+                    <FileUploader
+                      value={
+                        field.value && field.value instanceof File
+                          ? [field.value]
+                          : undefined
+                      }
+                      accept={{ "image/*": [] }}
+                      maxSize={1024 * 1024 * 10}
+                      onValueChange={(val) =>
+                        field.onChange(val[0] ?? undefined)
+                      }
+                      multiple={false}
+                    />
+                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,7 +194,10 @@ export function EditArticleForm({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <MarkdownEditor onValueChange={field.onChange} />
+                  <MarkdownEditor
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

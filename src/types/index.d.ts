@@ -16,12 +16,15 @@ type Article = {
   id: string;
   title: string;
   slug: string;
+  categoryId?: string;
   category?: string;
   project?: string;
   contents: string;
+  authorId?: string;
   author?: string;
   datePublished?: string;
   imageUrl: string;
+  tagId: string;
   tag: string;
   createdAt: string;
   updatedAt: string;

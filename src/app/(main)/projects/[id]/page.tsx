@@ -1,7 +1,5 @@
 "use client";
 
-import { getArticles } from "@/api/article";
-import { getProject } from "@/api/project";
 import { ArticleListItem } from "@/components/article-list-item";
 import { GenerateWebButton } from "@/components/generate-web-button";
 import { SetSectionDropdown } from "@/components/set-section-dropdown";

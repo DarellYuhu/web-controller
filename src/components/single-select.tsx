@@ -10,15 +10,17 @@ type Props = {
   options: { label: string; value: string }[];
   onValueChange: (value: string) => void;
   placeholder?: string;
+  value?: string;
 };
 
 export const SingleSelect = ({
   options,
   onValueChange,
   placeholder,
+  value,
 }: Props) => {
   return (
-    <Select onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

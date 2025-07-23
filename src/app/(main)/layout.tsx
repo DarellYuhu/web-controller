@@ -91,8 +91,8 @@ const menus = [
     icon: <Globe />,
   },
   {
-    label: "Article",
-    path: "/articles",
+    label: "Draft Articles",
+    path: "/draft-articles",
     icon: <FaRegNewspaper />,
   },
   {

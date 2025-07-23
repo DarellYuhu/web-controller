@@ -1,4 +1,4 @@
-import { getArticle, getFromTanky } from "@/api/article";
+import { getArticle } from "@/api/article";
 import { getAuthors } from "@/api/author";
 import { getCategories } from "@/api/category";
 import { getTags } from "@/api/tag";
@@ -14,7 +14,6 @@ export default async function EditArticlePage({ params }: Props) {
   const tags = await getTags();
   const categories = await getCategories();
   const authores = await getAuthors();
-  const reference = await getFromTanky(id);
   return (
     <div>
       <EditArticleForm
@@ -22,7 +21,6 @@ export default async function EditArticlePage({ params }: Props) {
         authors={authores}
         categories={categories}
         tags={tags}
-        reference={reference}
       />
     </div>
   );

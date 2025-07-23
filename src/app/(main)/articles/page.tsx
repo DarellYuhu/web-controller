@@ -7,6 +7,8 @@ import { useInfiniteArticles } from "@/hooks/use-infinite-articles";
 import { http } from "@/lib/api";
 import { useSelectedData } from "@/stores/selected-store";
 import { useMutation } from "@tanstack/react-query";
+import { Plus, Trash } from "lucide-react";
+import Link from "next/link";
 import { IoPushOutline } from "react-icons/io5";
 import { toast } from "sonner";
 
@@ -20,6 +22,17 @@ export default function ArticlesPage() {
     },
     onSuccess() {
       toast.success("Articles published successfully 🎊");
+    },
+    onError() {
+      toast.error("Something went wrong");
+    },
+  });
+  const { mutate: handleDelete, isPending: isDeleting } = useMutation({
+    mutationFn: async (payload: { data: string[] }) => {
+      await http.delete("/articles", { params: { list: payload.data } });
+    },
+    onSuccess() {
+      toast.success("Articles deleted successfully 🎊");
     },
     onError() {
       toast.error("Something went wrong");
@@ -43,13 +56,28 @@ export default function ArticlesPage() {
             />{" "}
             <p>Select all</p>
           </div>
-          <Button
-            disabled={selected.length === 0 || isPending}
-            onClick={() => mutate({ data: selected })}
-          >
-            <IoPushOutline />
-            Publish
-          </Button>
+          <div className="space-x-2">
+            <Button
+              disabled={selected.length === 0 || isPending}
+              onClick={() => mutate({ data: selected })}
+            >
+              <IoPushOutline />
+              Publish
+            </Button>
+            <Button
+              disabled={selected.length === 0 || isDeleting}
+              onClick={() => handleDelete({ data: selected })}
+              variant={"destructive"}
+            >
+              <Trash />
+              Delete draft
+            </Button>
+            <Button asChild>
+              <Link href={"/articles/create"}>
+                <Plus /> Create
+              </Link>
+            </Button>
+          </div>
         </div>
         {data?.pages
           .flatMap((item) => item.data)

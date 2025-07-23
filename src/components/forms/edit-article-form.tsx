@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { http } from "@/lib/api";
 import { toast } from "sonner";
 import { Trash } from "lucide-react";
+import { useReference } from "@/hooks/use-reference";
 
 const formSchema = z.object({
   contents: z.string().nonempty(),
@@ -34,16 +35,10 @@ type Props = {
   tags: BaseMetadata[];
   authors: BaseMetadata[];
   categories: Category[];
-  reference?: string;
 };
 
-export function EditArticleForm({
-  tags,
-  categories,
-  authors,
-  article,
-  reference,
-}: Props) {
+export function EditArticleForm({ tags, categories, authors, article }: Props) {
+  const { data: reference } = useReference();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {

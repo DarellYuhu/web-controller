@@ -46,6 +46,17 @@ export default function ProjectPage() {
                 ))}
               </td>
             </tr>
+            <tr>
+              <td className="font-semibold text-gray-500">Authors</td>
+              <td className="px-4">:</td>
+              <td className="space-x-1">
+                {project?.projectAuthor.map((a, idx) => (
+                  <Badge key={idx} variant={"outline"}>
+                    {a}
+                  </Badge>
+                ))}
+              </td>
+            </tr>
           </tbody>
         </table>
         <div>{id && <GenerateWebButton projectId={id} />}</div>

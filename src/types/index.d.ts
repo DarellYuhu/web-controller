@@ -5,6 +5,7 @@ type Project = {
   name: string;
   port: number;
   projectTag: string[];
+  projectAuthor: string[];
   description: string;
 };
 

@@ -8,7 +8,7 @@ import { toast } from "sonner";
 export const GenerateWebButton = ({ projectId }: { projectId: string }) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      await http.post(`/generator/${projectId}`);
+      await http.post(`/projects/${projectId}/generate`);
     },
     onSuccess() {
       toast.success("Web is being generated");

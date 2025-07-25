@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useInfiniteArticles } from "@/hooks/use-infinite-articles";
 import { useProject } from "@/hooks/use-project";
+import { useStopDeployment } from "@/hooks/use-stop-deployment";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 
@@ -17,6 +18,7 @@ export default function ProjectPage() {
   const { id }: { id?: string } = useParams();
   const { data: project } = useProject(id);
   const { data: articles, fetchNextPage } = useInfiniteArticles();
+  const { mutate: handleStop, isPending: isStoping } = useStopDeployment();
   return (
     <div className="space-y-8">
       <div className="border rounded-md p-5 flex justify-between">
@@ -36,6 +38,11 @@ export default function ProjectPage() {
               <td className="font-semibold text-gray-500">Port</td>
               <td className="px-4">:</td>
               <td>{project?.port}</td>
+            </tr>
+            <tr>
+              <td className="font-semibold text-gray-500">Status</td>
+              <td className="px-4">:</td>
+              <td>{project?.status}</td>
             </tr>
             <tr>
               <td className="font-semibold text-gray-500">Tags</td>
@@ -59,7 +66,21 @@ export default function ProjectPage() {
             </tr>
           </tbody>
         </table>
-        <div>{id && <GenerateWebButton projectId={id} />}</div>
+        <div className="flex flex-col gap-2">
+          {id && (
+            <>
+              <GenerateWebButton projectId={id} />
+              <Button
+                variant={"destructive"}
+                size={"sm"}
+                onClick={() => handleStop({ id })}
+                disabled={isStoping}
+              >
+                Stop deployment
+              </Button>
+            </>
+          )}
+        </div>
       </div>
       <div className="flex justify-between">
         <SetSectionDropdown />

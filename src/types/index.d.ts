@@ -7,6 +7,7 @@ type Project = {
   projectTag: string[];
   projectAuthor: string[];
   description: string;
+  status?: string;
 };
 
 type Cursor = {

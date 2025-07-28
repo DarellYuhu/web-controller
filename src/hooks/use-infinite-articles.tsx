@@ -1,4 +1,5 @@
 import { http } from "@/lib/api";
+import { SectionType } from "@/types/exported";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
 

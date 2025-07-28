@@ -14,6 +14,7 @@ import { http } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useSelectedData } from "@/stores/selected-store";
+import { SectionType } from "@/types/exported";
 
 export const SetSectionDropdown = () => {
   const selected = useSelectedData((state) => state.selected);

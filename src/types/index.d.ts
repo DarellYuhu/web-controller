@@ -60,9 +60,3 @@ type Prompt = {
   updatedAt: stirng;
   score: number;
 };
-
-enum SectionType {
-  Highlight,
-  TopPick,
-  Popular,
-}

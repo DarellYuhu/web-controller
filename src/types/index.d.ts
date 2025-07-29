@@ -8,6 +8,8 @@ type Project = {
   projectAuthor: string[];
   description: string;
   status?: string;
+  icon?: string;
+  logo?: string;
 };
 
 type Cursor = {

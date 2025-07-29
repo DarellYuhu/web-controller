@@ -1,6 +1,7 @@
 "use client";
 
 import { ArticleListItem } from "@/components/article-list-item";
+import { EditProjectForm } from "@/components/forms/edit-project-form";
 import { GenerateWebButton } from "@/components/generate-web-button";
 import { SetSectionDropdown } from "@/components/set-section-dropdown";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +70,7 @@ export default function ProjectPage() {
         <div className="flex flex-col gap-2">
           {id && (
             <>
+              {project && <EditProjectForm project={project} />}
               <GenerateWebButton projectId={id} />
               <Button
                 variant={"destructive"}

@@ -1,9 +1,10 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "./ui/button";
 import { http } from "@/lib/api";
 import { toast } from "sonner";
+import { DropdownMenuItem } from "./ui/dropdown-menu";
+import { MonitorCog } from "lucide-react";
 
 export const GenerateWebButton = ({ projectId }: { projectId: string }) => {
   const { mutate, isPending } = useMutation({
@@ -18,8 +19,8 @@ export const GenerateWebButton = ({ projectId }: { projectId: string }) => {
     },
   });
   return (
-    <Button size={"sm"} onClick={() => mutate()} disabled={isPending}>
-      Generate Web
-    </Button>
+    <DropdownMenuItem onClick={() => mutate()} disabled={isPending}>
+      <MonitorCog /> Generate Web
+    </DropdownMenuItem>
   );
 };

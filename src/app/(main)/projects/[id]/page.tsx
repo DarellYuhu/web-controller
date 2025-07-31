@@ -12,6 +12,14 @@ import { useProject } from "@/hooks/use-project";
 import { useStopDeployment } from "@/hooks/use-stop-deployment";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
+import { CirclePause, EllipsisVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { EditTemplateForm } from "@/components/forms/edit-template-form";
 
 export default function ProjectPage() {
   const searchParams = useSearchParams();
@@ -68,20 +76,27 @@ export default function ProjectPage() {
           </tbody>
         </table>
         <div className="flex flex-col gap-2">
-          {id && (
-            <>
-              {project && <EditProjectForm project={project} />}
-              <GenerateWebButton projectId={id} />
-              <Button
-                variant={"destructive"}
-                size={"sm"}
-                onClick={() => handleStop({ id })}
-                disabled={isStoping}
-              >
-                Stop deployment
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="outline" aria-label="Open edit menu">
+                <EllipsisVertical size={16} aria-hidden="true" />
               </Button>
-            </>
-          )}
+            </DropdownMenuTrigger>
+            {project && (
+              <DropdownMenuContent>
+                <EditProjectForm project={project} />
+                <EditTemplateForm projectId={project.id} />
+                <GenerateWebButton projectId={project.id} />
+                <DropdownMenuItem
+                  variant={"destructive"}
+                  onClick={() => handleStop({ id: project.id })}
+                  disabled={isStoping}
+                >
+                  <CirclePause /> Stop deployment
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            )}
+          </DropdownMenu>
         </div>
       </div>
       <div className="flex justify-between">

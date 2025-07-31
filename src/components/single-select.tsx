@@ -11,6 +11,7 @@ type Props = {
   onValueChange: (value: string) => void;
   placeholder?: string;
   value?: string;
+  onOpenChange?: (val: boolean) => void;
 };
 
 export const SingleSelect = ({
@@ -18,9 +19,14 @@ export const SingleSelect = ({
   onValueChange,
   placeholder,
   value,
+  onOpenChange,
 }: Props) => {
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select
+      value={value}
+      onValueChange={onValueChange}
+      onOpenChange={onOpenChange}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

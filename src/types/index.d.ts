@@ -10,6 +10,13 @@ type Project = {
   status?: string;
   icon?: string;
   logo?: string;
+  template?: Template;
+};
+
+type Template = {
+  header: number;
+  highlight: number;
+  topPicks: number;
 };
 
 type Cursor = {

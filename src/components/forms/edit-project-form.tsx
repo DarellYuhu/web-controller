@@ -27,6 +27,8 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { http } from "@/lib/api";
 import { toast } from "sonner";
+import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { toggleVariants } from "../ui/toggle";
 
 const formSchema = z.object({
   name: z.string().nonempty(),
@@ -68,8 +70,10 @@ export const EditProjectForm = ({ project }: { project: Project }) => {
   });
   return (
     <Dialog onOpenChange={(open) => !open && form.reset()}>
-      <DialogTrigger className={buttonVariants({ size: "sm" })}>
-        <Pencil /> Edit
+      <DialogTrigger className="" asChild>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <Pencil /> Edit project
+        </DropdownMenuItem>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

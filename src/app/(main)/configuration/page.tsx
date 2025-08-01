@@ -11,6 +11,23 @@ import { useCategories } from "@/hooks/use-categories";
 import { usePrompts } from "@/hooks/use-prompts";
 import { useTags } from "@/hooks/use-tags";
 import { useWhitelist } from "@/hooks/use-whitelist";
+import { http } from "@/lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { CircleAlertIcon, Trash } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export default function ConfigurationPage() {
@@ -65,7 +82,10 @@ export default function ConfigurationPage() {
                 className="rounded-md p-3 border flex justify-between items-center group"
               >
                 <p>{item.name}</p>
-                <WhitelistDialog item={item} />
+                <div className="space-x-2">
+                  <WhitelistDialog item={item} />
+                  <DeleteWhitelistAlert id={item.id} />
+                </div>
               </div>
             ))}
           </div>
@@ -88,5 +108,57 @@ export default function ConfigurationPage() {
         </ScrollArea>
       </div>
     </div>
+  );
+}
+function DeleteWhitelistAlert({ id }: { id: string }) {
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      await http.delete(`/whitelist/${id}`);
+    },
+    onSuccess() {
+      toast.success("Whitelist deleted successfully 🎊");
+      queryClient.invalidateQueries({ queryKey: ["whitelist"] });
+      setOpen(false);
+    },
+    onError() {
+      toast.error("Something went wrong!");
+    },
+  });
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="destructive"
+          size={"sm"}
+          className="group-hover:visible group-hover:opacity-100 invisible opacity-0 ml-auto rounded-sm"
+        >
+          <Trash /> Delete
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <div className="flex flex-col gap-2 max-sm:items-center sm:flex-row sm:gap-4">
+          <div
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border"
+            aria-hidden="true"
+          >
+            <CircleAlertIcon className="opacity-80" size={16} />
+          </div>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete whitelist</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this whitelist?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => mutate()} disabled={isPending}>
+            Confirm
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

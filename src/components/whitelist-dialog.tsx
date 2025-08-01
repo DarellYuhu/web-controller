@@ -23,6 +23,7 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useUpdatePrompts } from "@/hooks/use-update-prompts";
+import { ScrollArea } from "./ui/scroll-area";
 
 const formSchema = z.object({
   data: z.array(
@@ -69,45 +70,48 @@ export const WhitelistDialog = ({
             Bellow is the listed prompt under this whitelist
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form
-            id="update-prompts-form"
-            onSubmit={form.handleSubmit((val) =>
-              mutate({ id: item.id, payload: val.data }),
-            )}
-          >
-            {fields.map((field, idx) => (
-              <div key={field.id} className="rounded-md p-3 border space-y-2">
-                <FormField
-                  key={field.id}
-                  control={form.control}
-                  name={`data.${idx}.score`}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Score</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.currentTarget.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Textarea
-                  readOnly={true}
-                  value={
-                    item.prompts.find(({ id }) => id === field.promptId)?.text
-                  }
-                />
-              </div>
-            ))}
-          </form>
-        </Form>
+        <ScrollArea className="h-[600px]">
+          <Form {...form}>
+            <form
+              id="update-prompts-form"
+              className="space-y-4"
+              onSubmit={form.handleSubmit((val) =>
+                mutate({ id: item.id, payload: val.data }),
+              )}
+            >
+              {fields.map((field, idx) => (
+                <div key={field.id} className="rounded-md p-3 border space-y-2">
+                  <FormField
+                    key={field.id}
+                    control={form.control}
+                    name={`data.${idx}.score`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Score</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            onChange={(e) =>
+                              field.onChange(e.currentTarget.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Textarea
+                    readOnly={true}
+                    value={
+                      item.prompts.find(({ id }) => id === field.promptId)?.text
+                    }
+                  />
+                </div>
+              ))}
+            </form>
+          </Form>
+        </ScrollArea>
         <DialogFooter>
           <Button type="submit" form="update-prompts-form">
             <Save /> Save

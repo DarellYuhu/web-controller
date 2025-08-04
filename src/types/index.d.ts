@@ -17,6 +17,7 @@ type Template = {
   header: number;
   highlight: number;
   topPicks: number;
+  articleHeader?: number;
 };
 
 type Cursor = {

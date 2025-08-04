@@ -28,6 +28,7 @@ const formSchema = z.object({
   header: z.number().max(4),
   highlight: z.number().max(4),
   topPicks: z.number().max(4),
+  articleHeader: z.number().max(3),
 });
 type FormSchema = z.infer<typeof formSchema>;
 
@@ -40,6 +41,7 @@ export const EditTemplateForm = ({ projectId }: { projectId: string }) => {
       highlight: project?.template?.highlight ?? 1,
       topPicks: project?.template?.topPicks ?? 1,
       header: project?.template?.header ?? 1,
+      articleHeader: project?.template?.articleHeader ?? 1,
     },
   });
   const { mutate, isPending } = useMutation({
@@ -73,6 +75,7 @@ export const EditTemplateForm = ({ projectId }: { projectId: string }) => {
             <form
               id="edit-template-form"
               onSubmit={form.handleSubmit((val) => mutate(val))}
+              className="grid grid-cols-2 gap-4"
             >
               <FormField
                 control={form.control}
@@ -123,6 +126,26 @@ export const EditTemplateForm = ({ projectId }: { projectId: string }) => {
                     <FormControl>
                       <SingleSelect
                         options={Array.from({ length: 4 }).map((_, idx) => ({
+                          label: (idx + 1).toString(),
+                          value: (idx + 1).toString(),
+                        }))}
+                        onValueChange={(val) => field.onChange(parseInt(val))}
+                        value={field.value.toString()}
+                        onOpenChange={() => setSelectedKey(field.name)}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="articleHeader"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Article Header</FormLabel>
+                    <FormControl>
+                      <SingleSelect
+                        options={Array.from({ length: 3 }).map((_, idx) => ({
                           label: (idx + 1).toString(),
                           value: (idx + 1).toString(),
                         }))}
